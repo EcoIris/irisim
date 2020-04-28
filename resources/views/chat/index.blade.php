@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>IM</title>
+    <link rel="stylesheet" href="{{asset('asset/layui/css/layim.css')}}">
+    <link rel="stylesheet" href="{{asset('asset/layui/css/layui.css')}}">
+</head>
+<body>
+<script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
+<script src="{{asset('asset/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
+<script src="{{asset('asset/layui/layer.js')}}"></script>
+<script>
+    layui.use('layim', function(layim){
+        var user = {!! $member !!};
+
+        // 如果服务端不在本机，请把127.0.0.1改成服务端ip
+        var socket = io('http://127.0.0.1:3333',{query:{user:JSON.stringify(user)}});
+
+        socket.on('message', function (res) {
+            layer.msg(res.msg,{icon:2,time:3000});
+            return;
+        });
+
+        // 更新消息列表
+        socket.on('updateMsg', function(res){
+            layim.getMessage(res);
+        });
+
+        // 发送消息
+        layim.on('sendMessage', function (res) {
+            socket.emit('sendMsg', res);
+        });
+
+        //基础配置
+        layim.config({
+            //我的信息、好友列表、群组列表
+            init: {!! $list !!},
+            //主面板最小化后显示的名称
+            title: user.username,
+            //获取群员接口
+            members: {
+                url: '', //接口地址
+                type: 'get', //默认get，一般可不填
+                data: {} //额外参数
+            },
+            isAudio:true,
+            isVideo:true,
+            notice:true,
+            //上传图片接口
+            uploadImage: {
+                url: '', //接口地址
+                type: 'post' //默认post
+            },
+            //上传文件接口
+            uploadFile: {
+                url: '', //接口地址
+                type: 'post' //默认post
+            },
+            msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html', //消息盒子页面地址，若不开启，剔除该项即可
+            find: layui.cache.dir + 'css/modules/layim/html/find.html', //发现页面地址，若不开启，剔除该项即可
+            chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
+        });
+
+        layim.on('online', function(status){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/chat/updateStatus',
+                type: 'POST',
+                data: {
+                    status: status
+                },
+                success: function(res) {
+                    if (!res.state) {
+                        layer.msg(res.message,{icon:2,time:2000});
+                        return;
+                    }
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>
