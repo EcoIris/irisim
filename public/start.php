@@ -38,11 +38,24 @@ $io->on('connection', function($socket) use ($io){
             'fromid' => $data['mine']['id'], //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
             'timestamp' => Controller::getMillisecond() //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000,
         ];
-        $io->to($user[$data['to']['id']]['socketId'])->emit('updateMsg', $res);
+        if (isset($user[$data['to']['id']])){
+            $io->to($user[$data['to']['id']]['socketId'])->emit('updateMsg', $res);
+        }
+    });
+
+    // 更新好友状态
+    $socket->on('updateStatus', function ($data) use ($io){
+        global $user;
+        $keys = array_keys($user);
+        foreach ($data['friends'] as $value){
+            if (in_array($value, $keys)){
+                $io->to($user[$value]['socketId'])->emit('updateStatus', ['id' => $data['id'], 'status' => $data['status']]);
+            }
+        }
     });
 
     // 断开连接更新用户列表
-    $socket->on('disconnect', function () use($socket, $io) {
+    $socket->on('disconnect', function () use($socket) {
         global $user;
         foreach ($user as $key => $value){
             if ($value['socketId'] == $socket->id){

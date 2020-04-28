@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>IM</title>
-    <link rel="stylesheet" href="{{asset('asset/layui/css/layim.css')}}">
-    <link rel="stylesheet" href="{{asset('asset/layui/css/layui.css')}}">
+    <title>IM主面板</title>
+    <link rel="stylesheet" href="{{asset('/asset/layui/css/layim.css')}}">
+    <link rel="stylesheet" href="{{asset('/asset/layui/css/layui.css')}}">
 </head>
 <body>
-<script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
-<script src="{{asset('asset/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
-<script src="{{asset('asset/layui/layer.js')}}"></script>
+<script src='{{asset('/asset/js/socket.io.js')}}'></script>
+<script src="{{asset('/asset/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{asset('/asset/js/jquery.min.js')}}"></script>
+<script src="{{asset('/asset/layui/layer.js')}}"></script>
 <script>
     layui.use('layim', function(layim){
         var user = {!! $member !!};
@@ -29,9 +29,40 @@
             layim.getMessage(res);
         });
 
+        // 更新好友状态
+        socket.on('updateStatus', function (res) {
+            console.log(res);
+            if (res.status === 'online'){
+                layim.setFriendStatus(res.id, 'online');
+            }else{
+                layim.setFriendStatus(res.id, 'offline');
+            }
+        });
+
         // 发送消息
         layim.on('sendMessage', function (res) {
             socket.emit('sendMsg', res);
+        });
+
+        // 修改签名
+        layim.on('sign', function(value){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/chat/updateSign',
+                type: 'POST',
+                data: {
+                    sign: value
+                },
+                success: function(res) {
+                    if (!res.state) {
+                        layer.msg(res.message,{icon:2,time:2000});
+                        return;
+                    }
+                    socket.emit('updateStatus', {friends:res.data, status:status, id:user.id});
+                }
+            });
         });
 
         //基础配置
@@ -79,8 +110,9 @@
                         layer.msg(res.message,{icon:2,time:2000});
                         return;
                     }
+                    socket.emit('updateStatus', {friends:res.data, status:status, id:user.id});
                 }
-            })
+            });
         });
     });
 </script>

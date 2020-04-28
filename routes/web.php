@@ -17,5 +17,6 @@ Route::match(['get', 'post'], 'login', 'Admin\LoginController@login');
 Route::group(['middleware' => ['verifyLogin']], function () {
     Route::get('/', 'Admin\ChatController@chat');
     Route::post('/chat/updateStatus', 'Admin\ChatController@updateStatus');
+    Route::post('/chat/updateSign', 'Admin\ChatController@updateSign');
 });
 

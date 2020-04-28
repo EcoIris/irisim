@@ -1,6 +1,6 @@
 /** layui-v2.5.6 MIT License By https://www.layui.com */
 ;layui.define(["layer", "laytpl", "upload"], function(i) {
-    var a = "3.9.1"
+    var a = "1.0.0"
         , e = layui.$
         , t = layui.layer
         , n = layui.laytpl
@@ -970,8 +970,8 @@
             })
         },
         about: function() {
-            t.alert("版本： " + a + '<br>版权所有：<a href="http://layim.layui.com" target="_blank">layim.layui.com</a>', {
-                title: "关于 LayIM",
+            t.alert("版本： " + a + '<br>介绍：<span>仅供学习</span>', {
+                title: "关于IM",
                 shade: !1
             })
         },

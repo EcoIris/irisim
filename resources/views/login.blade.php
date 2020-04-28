@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>登录</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <link href="{{asset('asset/layui/css/login.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('asset/layui/css/H-ui.min.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('asset/layui/css/iconfont.css')}}" rel="stylesheet" type="text/css" />
+    <title>用户登录</title>
+    <meta name="keywords" content="web端,即时通讯,socket,PHPSocketIO,IM">
+    <meta name="description" content="基于PHPSocketIO的web端即时通讯IM">
+    <link href="{{asset('/asset/layui/css/login.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('/asset/layui/css/H-ui.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('/asset/layui/css/iconfont.css')}}" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <style>
@@ -21,9 +21,6 @@
     }
 </style>
 <input type="hidden" id="TenantId" name="TenantId" value="" />
-{{--<div class="header">--}}
-{{--    <img src="">--}}
-{{--</div>--}}
 <div class="loginWraper">
   <div id="loginform" class="loginBox">
     <form id="login" class="form form-horizontal" >
@@ -58,9 +55,9 @@
     </form>
   </div>
 </div>
-<div class="footer">Copyright后台 <a href="http://www.beian.miit.gov.cn">浙ICP备0000000号</a></div>
-<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
-<script src="{{asset('asset/layui/layer.js')}}"></script>
+<div class="footer">Copyright IM即时通讯<a href="http://www.beian.miit.gov.cn">xICP备xxxxxx号</a></div>
+<script type="text/javascript" src="{{asset('/asset/js/jquery.min.js')}}"></script>
+<script src="{{asset('/asset/layui/layer.js')}}"></script>
 <script>
 
   $(document).keydown(function(event){
