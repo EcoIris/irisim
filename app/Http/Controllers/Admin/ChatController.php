@@ -118,4 +118,14 @@ class ChatController extends Controller
             ->toArray();
         return response()->json(['code' => 0, 'msg' => '', 'data' => ['list' => $list]]);
     }
+
+    /*
+     * 查找用户
+     * */
+    public function searchUser(Request $request)
+    {
+        $username = $request->input('username');
+        $list = User::select('id', 'username', 'avatar')->where('username', 'like', $username)->get()->toArray();
+        return $this->success($list);
+    }
 }

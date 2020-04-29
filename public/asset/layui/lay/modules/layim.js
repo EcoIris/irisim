@@ -269,7 +269,7 @@
         };
         x.find(".layim-list-history").on("contextmenu", "li", function(a) {
             var n = e(this)
-                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '"><li layim-event="menuHistory" data-type="one">移除该会话</li><li layim-event="menuHistory" data-type="all">清空全部会话列表</li></ul>';
+                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '"><li layim-event="menuHistory" data-type="one">移除该会话</li><li layim-event="menuHistory" data-type="all">清空全部会话</li></ul>';
             n.hasClass("layim-null") || (t.tips(l, this, {
                 tips: 1,
                 time: 0,

@@ -18,6 +18,7 @@ Route::group(['middleware' => ['verifyLogin']], function () {
     Route::get('/', 'Admin\ChatController@chat');
     Route::get('/chat/getUserRelation', 'Admin\ChatController@getUserRelation');
     Route::get('/chat/getGroupUser', 'Admin\ChatController@getGroupUser');
+    Route::get('/chat/searchUser', 'Admin\ChatController@searchUser');
     Route::post('/chat/updateStatus', 'Admin\ChatController@updateStatus');
     Route::post('/chat/updateSign', 'Admin\ChatController@updateSign');
 });

@@ -27,16 +27,15 @@
       <div class="row cl">
           <label class="form-label col-xs-3"></label>
           <div class="formControls col-xs-8">
-          <input name="username" type="text" placeholder="请输入手机号" autocomplete="off" class="input-text size-L" required>
+          <input name="username" type="text" placeholder="请输入用户名" autocomplete="off" class="input-text size-L" required>
         </div>
       </div>
       <div class="row cl">
           <label class="form-label col-xs-3"></label>
           <div class="formControls col-xs-8">
-          <input name="password" type="password" placeholder="密码" autocomplete="off" class="input-text size-L" required>
+          <input name="password" type="password" placeholder="请输入密码" autocomplete="off" class="input-text size-L" required>
         </div>
       </div>
-
       <div class="row cl">
         <label class="form-label col-xs-3"></label>
         <div class="formControls col-xs-8">

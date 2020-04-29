@@ -4,29 +4,114 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>发现</title>
-
     <link rel="stylesheet" href="../../../layui.css">
     <style>
 
     </style>
 </head>
 <body>
+<!--<div style="margin: 15px;">-->
+<!--    <blockquote class="layui-elem-quote">开发中...-->
+<!--        <br></blockquote>-->
+<!--</div>-->
+<div class="layui-container">
+    <div class="layui-tab">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="friend">查 找</button>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <div class="layui-tab">
 
-<div style="margin: 15px;">
-    <blockquote class="layui-elem-quote">此为自定义的【查找】页面，因需求不一，所以官方暂不提供该模版结构与样式，实际使用时，可移至该文件到你的项目中，对页面自行把控。
-        <br>文件所在目录（相对于layui.js）：/css/modules/layim/html/find.html</blockquote>
+    </div>
 </div>
 <script src="../../../../layui.js"></script>
 <script>
-    layui.use(['layim', 'laypage'], function(){
-        var layim = layui.layim
-            ,layer = layui.layer
-            ,laytpl = layui.laytpl
-            ,$ = layui.jquery
-            ,laypage = layui.laypage;
+    layui.use(['layim', 'laypage', 'element', 'form', 'layedit', 'table'], function(){
+        var layim = layui.layim,
+            layer = layui.layer,
+            laytpl = layui.laytpl,
+            $ = layui.jquery,
+            laypage = layui.laypage,
+            element = layui.element,
+            form = layui.form,
+            layedit = layui.layedit,
+            table = layui.table;
 
-        //一些添加好友请求之类的交互参见文档
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
 
+        //自定义验证规则
+        form.verify({
+            pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+
+        form.on('submit(friend)',function (data) {
+            $.ajax({
+                url: '/chat/searchUser',
+                type: 'get',
+                data: data.field,
+                success:function(res){
+                    if(!res.state){
+                        layer.alert(res.msg);
+                        return;
+                    }
+                    userList(res.data)
+                },
+                error:function(e){
+                    layer.alert("网络错误")
+                }
+            });
+            return false;
+        });
+
+        function userList(list) {
+            //展示已知数据
+            table.render({
+                elem: '.layui-tab',
+                toolbar: false,
+                loading:false
+                ,cols: [[ //标题栏
+                    {field: 'id', title: 'ID', width: 80, sort: true}
+                    ,{field: 'username', title: '用户名', width: 120}
+                    ,{field: 'avatar', title: '邮箱', minWidth: 150}
+                ]]
+                ,data: [{
+                    "id": "10001"
+                    ,"username": "杜甫"
+                    ,"avatar": "xianxin@layui.com"
+                }, {
+                    "id": "10002"
+                    ,"username": "李白"
+                    ,"avatar": "xianxin@layui.com"
+
+                }, {
+                    "id": "10003"
+                    ,"username": "王勃"
+                    ,"avatar": "xianxin@layui.com"
+
+                }, {
+                    "id": "10004"
+                    ,"username": "贤心"
+                    ,"avatar": "xianxin@layui.com"
+                }]
+                // ,even: true
+            });
+        }
     });
 </script>
 </body>

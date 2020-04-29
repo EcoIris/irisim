@@ -8,49 +8,16 @@
     <link rel="stylesheet" href="{{asset('/asset/layui/css/layui.css')}}">
 </head>
 <body>
-<script src='{{asset('/asset/js/socket.io.js')}}'></script>
-<script src="{{asset('/asset/layui/layui.js')}}"></script>
 <script type="text/javascript" src="{{asset('/asset/js/jquery.min.js')}}"></script>
-<script src="{{asset('/asset/layui/layer.js')}}"></script>
+<script type="text/javascript" src='{{asset('/asset/js/socket.io.js')}}'></script>
+<script type="text/javascript" src="{{asset('/asset/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{asset('/asset/layui/layer.js')}}"></script>
 <script>
-    layui.use('layim', function(layim){
+        layui.use('layim', function(layim){
         var user = {!! $member !!};
         var room = {!! $room !!};
         // 如果服务端不在本机，请把127.0.0.1改成服务端ip
         var socket = io('http://127.0.0.1:3333',{query:{user:JSON.stringify(user),room:JSON.stringify(room)}});
-
-        socket.on('message', function (res) {
-            layer.msg(res.msg,{icon:2,time:3000});
-            return;
-        });
-
-        // 更新好友状态
-        socket.on('updateStatus', function (res) {
-            if (res.status === 'online'){
-                layim.setFriendStatus(res.id, 'online');
-            }else{
-                layim.setFriendStatus(res.id, 'offline');
-            }
-        });
-
-        // 发送私聊消息
-        layim.on('sendMessage', function (res) {
-            if (res.to.type === 'group'){
-                socket.emit('sendGroupMsg', res);
-            }else{
-                socket.emit('sendMsg', res);
-            }
-        });
-
-        // 更新私聊消息
-        socket.on('updateMsg', function(res){
-            layim.getMessage(res);
-        });
-
-        // 更新群组消息
-        socket.on('updateGroupMsg', function(res){
-            layim.getMessage(res);
-        });
 
         //基础配置
         layim.config({
@@ -84,6 +51,40 @@
             msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html', //消息盒子页面地址，若不开启，剔除该项即可
             find: layui.cache.dir + 'css/modules/layim/html/find.html', //发现页面地址，若不开启，剔除该项即可
             chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
+        });
+
+        // 接收错误提示
+        socket.on('message', function (res) {
+            layer.msg(res.msg,{icon:2,time:3000});
+            return;
+        });
+
+        // 更新好友状态
+        socket.on('updateStatus', function (res) {
+            if (res.status === 'online'){
+                layim.setFriendStatus(res.id, 'online');
+            }else{
+                layim.setFriendStatus(res.id, 'offline');
+            }
+        });
+
+        // 发送私聊消息
+        layim.on('sendMessage', function (res) {
+            if (res.to.type === 'group'){
+                socket.emit('sendGroupMsg', res);
+            }else{
+                socket.emit('sendMsg', res);
+            }
+        });
+
+        // 更新私聊消息
+        socket.on('updateMsg', function(res){
+            layim.getMessage(res);
+        });
+
+        // 更新群组消息
+        socket.on('updateGroupMsg', function(res){
+            layim.getMessage(res);
         });
 
         // 更新在线状态

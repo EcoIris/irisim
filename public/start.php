@@ -19,18 +19,17 @@ $io->on('connection', function($socket) use ($io){
         $socket->disconnect();
         return;
     }
+    $member = json_decode($param['user'], true);
+    $member['socketId'] = $socket->id;
+    $user[$member['id']] = $member;
+
+    // 创建群聊房间
     if ($param['room']){
         $param['room'] = json_decode($param['room'], true);
         foreach ($param['room'] as $value){
             $socket->join('room' . $value);
-            print_r('加入room'. $value);
-            echo "\n";
         }
     }
-
-    $param = json_decode($param['user'], true);
-    $param['socketId'] = $socket->id;
-    $user[$param['id']] = $param;
 
     // 发送私聊消息
     $socket->on('sendMsg', function($data) use ($io){
