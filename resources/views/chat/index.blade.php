@@ -15,23 +15,17 @@
 <script>
     layui.use('layim', function(layim){
         var user = {!! $member !!};
-
+        var room = {!! $room !!};
         // 如果服务端不在本机，请把127.0.0.1改成服务端ip
-        var socket = io('http://127.0.0.1:3333',{query:{user:JSON.stringify(user)}});
+        var socket = io('http://127.0.0.1:3333',{query:{user:JSON.stringify(user),room:JSON.stringify(room)}});
 
         socket.on('message', function (res) {
             layer.msg(res.msg,{icon:2,time:3000});
             return;
         });
 
-        // 更新消息列表
-        socket.on('updateMsg', function(res){
-            layim.getMessage(res);
-        });
-
         // 更新好友状态
         socket.on('updateStatus', function (res) {
-            console.log(res);
             if (res.status === 'online'){
                 layim.setFriendStatus(res.id, 'online');
             }else{
@@ -39,30 +33,23 @@
             }
         });
 
-        // 发送消息
+        // 发送私聊消息
         layim.on('sendMessage', function (res) {
-            socket.emit('sendMsg', res);
+            if (res.to.type === 'group'){
+                socket.emit('sendGroupMsg', res);
+            }else{
+                socket.emit('sendMsg', res);
+            }
         });
 
-        // 修改签名
-        layim.on('sign', function(value){
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/chat/updateSign',
-                type: 'POST',
-                data: {
-                    sign: value
-                },
-                success: function(res) {
-                    if (!res.state) {
-                        layer.msg(res.message,{icon:2,time:2000});
-                        return;
-                    }
-                    socket.emit('updateStatus', {friends:res.data, status:status, id:user.id});
-                }
-            });
+        // 更新私聊消息
+        socket.on('updateMsg', function(res){
+            layim.getMessage(res);
+        });
+
+        // 更新群组消息
+        socket.on('updateGroupMsg', function(res){
+            layim.getMessage(res);
         });
 
         //基础配置
@@ -99,6 +86,7 @@
             chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
         });
 
+        // 更新在线状态
         layim.on('online', function(status){
             $.ajax({
                 headers: {
@@ -108,6 +96,27 @@
                 type: 'POST',
                 data: {
                     status: status
+                },
+                success: function(res) {
+                    if (!res.state) {
+                        layer.msg(res.message,{icon:2,time:2000});
+                        return;
+                    }
+                    socket.emit('updateStatus', {friends:res.data, status:status, id:user.id});
+                }
+            });
+        });
+
+        // 更新签名
+        layim.on('sign', function(value){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/chat/updateSign',
+                type: 'POST',
+                data: {
+                    sign: value
                 },
                 success: function(res) {
                     if (!res.state) {

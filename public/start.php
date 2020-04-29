@@ -19,12 +19,20 @@ $io->on('connection', function($socket) use ($io){
         $socket->disconnect();
         return;
     }
+    if ($param['room']){
+        $param['room'] = json_decode($param['room'], true);
+        foreach ($param['room'] as $value){
+            $socket->join('room' . $value);
+            print_r('加入room'. $value);
+            echo "\n";
+        }
+    }
 
     $param = json_decode($param['user'], true);
     $param['socketId'] = $socket->id;
     $user[$param['id']] = $param;
 
-    // 发送通知
+    // 发送私聊消息
     $socket->on('sendMsg', function($data) use ($io){
         global $user;
         $res = [
@@ -41,6 +49,22 @@ $io->on('connection', function($socket) use ($io){
         if (isset($user[$data['to']['id']])){
             $io->to($user[$data['to']['id']]['socketId'])->emit('updateMsg', $res);
         }
+    });
+
+    // 发送群消息
+    $socket->on('sendGroupMsg', function ($data) use ($socket){
+        $res = [
+            'id' => $data['to']['id'], //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
+            'username' => $data['mine']['username'], //消息来源用户名
+            'avatar' => $data['mine']['avatar'], //消息来源用户头像
+            'type' => $data['to']['type'], //聊天窗口来源类型，从发送消息传递的to里面获取
+            'content' => $data['mine']['content'], //消息内容
+            'cid' => 0, //消息id，可不传。除非你要对消息进行一些操作（如撤回）
+            'mine' => false, //是否我发送的消息，如果为true，则会显示在右方,
+            'fromid' => $data['mine']['id'], //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+            'timestamp' => Controller::getMillisecond() //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000,
+        ];
+        $socket->to('room' . $data['to']['id'])->emit('updateGroupMsg', $res);
     });
 
     // 更新好友状态

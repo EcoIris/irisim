@@ -23,8 +23,10 @@ class ChatController extends Controller
         if ($member->status == 'offline'){
             $member->status = 'hide';
         }
+        $room = GroupUser::where('uid', $member->id)->pluck('group_id')->toArray();
         return view('chat.index', [
-            'member' => json_encode($member)
+            'member' => json_encode($member, JSON_UNESCAPED_UNICODE),
+            'room' => json_encode($room, JSON_UNESCAPED_UNICODE)
         ]);
     }
 
