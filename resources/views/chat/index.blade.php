@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>IM主面板</title>
+    <title>即时通讯IM</title>
     <link rel="stylesheet" href="{{asset('/asset/layui/css/layim.css')}}">
     <link rel="stylesheet" href="{{asset('/asset/layui/css/layui.css')}}">
 </head>
@@ -68,12 +68,16 @@
         //基础配置
         layim.config({
             //我的信息、好友列表、群组列表
-            init: {!! $list !!},
+            init: {
+                url: '/chat/getUserRelation', //接口地址
+                type: 'get', //默认get，一般可不填
+                data: {} //额外参数
+            },
             //主面板最小化后显示的名称
             title: user.username,
             //获取群员接口
             members: {
-                url: '', //接口地址
+                url: '/chat/getGroupUser', //接口地址
                 type: 'get', //默认get，一般可不填
                 data: {} //额外参数
             },

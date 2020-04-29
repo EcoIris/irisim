@@ -5,31 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Friend;
 use App\Http\Models\FriendGroup;
+use App\Http\Models\Group;
+use App\Http\Models\GroupUser;
 use App\Http\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ChatController extends Controller
 {
+    /*
+     * 初始化聊天
+     * */
     public function chat(Request $request)
     {
         $member = session('member');
         if ($member->status == 'offline'){
             $member->status = 'hide';
         }
-        $data = [];
-        $data['mine'] = $member;
-        $data['friend'] = FriendGroup::select('id', 'name as groupname')
-            ->with(['list' => function($query){
-                return $query->select('friend.friend_group_id', 'user.id', 'user.username', 'user.avatar', 'user.sign', 'user.status')
-                    ->leftJoin('user', 'friend.friend_id', '=', 'user.id');
-            }])->where('uid', $member->id)
-            ->get()
-            ->toArray();
-        $data['group'] = [];
         return view('chat.index', [
-            'member' => json_encode($member),
-            'list' => json_encode($data, JSON_UNESCAPED_UNICODE)
+            'member' => json_encode($member)
         ]);
     }
 
@@ -78,5 +73,47 @@ class ChatController extends Controller
             return $this->success();
         }
         return $this->fail('修改失败');
+    }
+
+    /*
+     * 获取用户关系
+     */
+    public function getUserRelation(Request $request)
+    {
+        $member = session('member');
+        if ($member->status == 'offline'){
+            $member->status = 'hide';
+        }
+        $data = [];
+        $data['mine'] = $member;
+        $data['friend'] = FriendGroup::select('id', 'name as groupname')
+            ->with(['list' => function($query){
+                return $query->select('friend.friend_group_id', 'user.id', 'user.username', 'user.avatar', 'user.sign', 'user.status')
+                    ->leftJoin('user', 'friend.friend_id', '=', 'user.id');
+            }])->where('uid', $member->id)
+            ->get()
+            ->toArray();
+        $data['group'] = DB::table('group_user as a')
+            ->rightJoin('group as b', 'a.group_id', '=', 'b.id')
+            ->select('b.id', 'b.name as groupname', 'b.avatar')
+            ->where('a.uid', $member->id)
+            ->get()
+            ->toArray();
+        return response()->json(['code' => 0, 'msg' => '', 'data' => $data]);
+    }
+
+    /*
+     * 获取群成员
+     * */
+    public function getGroupUser(Request $request)
+    {
+        $id = $request->input('id');
+        $list = DB::table('group_user as a')
+            ->rightJoin('user as b', 'a.uid', '=', 'b.id')
+            ->select('b.id', 'b.username', 'b.avatar', 'b.sign')
+            ->where('a.group_id', $id)
+            ->get()
+            ->toArray();
+        return response()->json(['code' => 0, 'msg' => '', 'data' => ['list' => $list]]);
     }
 }
