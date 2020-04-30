@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>消息盒子</title>
-
     <link rel="stylesheet" href="../../../layui.css">
     <style>
         .layim-msgbox{margin: 15px;}
@@ -27,11 +27,11 @@
 {{# layui.each(d.data, function(index, item){
   if(item.from){ }}
     <li data-uid="{{ item.from }}" data-fromGroup="{{ item.from_group }}">
-      <a href="/u/{{ item.from }}/" target="_blank">
+      <a href="javascript:void(0);">
         <img src="{{ item.user.avatar }}" class="layui-circle layim-msgbox-avatar">
       </a>
       <p class="layim-msgbox-user">
-        <a href="/u/{{ item.from }}/" target="_blank">{{ item.user.username||'' }}</a>
+        <a href="javascript:void(0);" >{{ item.user.username||'' }}</a>
         <span>{{ item.time }}</span>
       </p>
       <p class="layim-msgbox-content">
@@ -64,113 +64,11 @@
 
         //请求消息
         var renderMsg = function(page, callback){
-
-            var res = {
-                "code": 0,
-                "pages": 1,
-                "data": [
-                    {
-                        "id": 76,
-                        "content": "申请添加你为好友",
-                        "uid": 168,
-                        "from": 166488,
-                        "from_group": 0,
-                        "type": 1,
-                        "remark": "有问题要问",
-                        "href": null,
-                        "read": 1,
-                        "time": "刚刚",
-                        "user": {
-                            "id": 166488,
-                            "avatar": "//q.qlogo.cn/qqapp/101235792/B704597964F9BD0DB648292D1B09F7E8/100",
-                            "username": "李彦宏",
-                            "sign": null
-                        }
-                    },
-                    {
-                        "id": 75,
-                        "content": "申请添加你为好友",
-                        "uid": 168,
-                        "from": 347592,
-                        "from_group": 0,
-                        "type": 1,
-                        "remark": "你好啊！",
-                        "href": null,
-                        "read": 1,
-                        "time": "刚刚",
-                        "user": {
-                            "id": 347592,
-                            "avatar": "//q.qlogo.cn/qqapp/101235792/B78751375E0531675B1272AD994BA875/100",
-                            "username": "麻花疼",
-                            "sign": null
-                        }
-                    },
-                    {
-                        "id": 62,
-                        "content": "雷军 拒绝了你的好友申请",
-                        "uid": 168,
-                        "from": null,
-                        "from_group": null,
-                        "type": 1,
-                        "remark": null,
-                        "href": null,
-                        "read": 1,
-                        "time": "10天前",
-                        "user": {
-                            "id": null
-                        }
-                    },
-                    {
-                        "id": 60,
-                        "content": "马小云 已经同意你的好友申请",
-                        "uid": 168,
-                        "from": null,
-                        "from_group": null,
-                        "type": 1,
-                        "remark": null,
-                        "href": null,
-                        "read": 1,
-                        "time": "10天前",
-                        "user": {
-                            "id": null
-                        }
-                    },
-                    {
-                        "id": 61,
-                        "content": "贤心 已经同意你的好友申请",
-                        "uid": 168,
-                        "from": null,
-                        "from_group": null,
-                        "type": 1,
-                        "remark": null,
-                        "href": null,
-                        "read": 1,
-                        "time": "10天前",
-                        "user": {
-                            "id": null
-                        }
-                    }
-                ]
-            }
-
-            if(res.code != 0){
-                return layer.msg(res.msg);
-            }
-
-            //记录来源用户信息
-            layui.each(res.data, function(index, item){
-                cache[item.from] = item.user;
-            });
-
-            callback && callback(res.data, res.pages);
-
-            //实际部署时，请将下述 getmsg.json 改为你的接口地址
-            /*
-            $.get('getmsg.json', {
+            $.get('/chat/noticeList', {
               page: page || 1
             }, function(res){
-              if(res.code != 0){
-                return layer.msg(res.msg);
+              if(!res.state){
+                return layer.msg(res.message);
               }
 
               //记录来源用户信息
@@ -180,7 +78,6 @@
 
               callback && callback(res.data, res.pages);
             });
-            */
         };
 
         //消息信息流
@@ -222,45 +119,33 @@
                     ,avatar: user.avatar
                     ,group: parent.layui.layim.cache().friend //获取好友分组数据
                     ,submit: function(group, index){
+                        $.ajax({
+                            url: '/chat/agreeFriend',
+                            type: 'post',
+                            data: {
+                                uid: uid //对方用户ID
+                                ,from_group: from_group //对方设定的好友分组
+                                ,group: group //我设定的好友分组
+                            },
+                            success:function(res){
+                                if(!res.state){
+                                    parent.layer.close(index);
+                                    return layer.msg(res.message);
+                                }
 
-                        //将好友追加到主面板
-                        parent.layui.layim.addList({
-                            type: 'friend'
-                            ,avatar: user.avatar //好友头像
-                            ,username: user.username //好友昵称
-                            ,groupid: group //所在的分组id
-                            ,id: uid //好友ID
-                            ,sign: user.sign //好友签名
+                                //将好友追加到主面板
+                                parent.layui.layim.addList({
+                                    type: 'friend'
+                                    ,avatar: user.avatar //好友头像
+                                    ,username: user.username //好友昵称
+                                    ,groupid: group //所在的分组id
+                                    ,id: uid //好友ID
+                                    ,sign: user.sign //好友签名
+                                });
+                                parent.layer.close(index);
+                                othis.parent().html('已同意');
+                            }
                         });
-                        parent.layer.close(index);
-                        othis.parent().html('已同意');
-
-
-                        //实际部署时，请开启下述注释，并改成你的接口地址
-                        /*
-                        $.post('/im/agreeFriend', {
-                          uid: uid //对方用户ID
-                          ,from_group: from_group //对方设定的好友分组
-                          ,group: group //我设定的好友分组
-                        }, function(res){
-                          if(res.code != 0){
-                            return layer.msg(res.msg);
-                          }
-
-                          //将好友追加到主面板
-                          parent.layui.layim.addList({
-                            type: 'friend'
-                            ,avatar: user.avatar //好友头像
-                            ,username: user.username //好友昵称
-                            ,groupid: group //所在的分组id
-                            ,id: uid //好友ID
-                            ,sign: user.sign //好友签名
-                          });
-                          parent.layer.close(index);
-                          othis.parent().html('已同意');
-                        });
-                        */
-
                     }
                 });
             }

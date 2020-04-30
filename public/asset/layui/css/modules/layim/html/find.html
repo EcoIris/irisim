@@ -6,7 +6,36 @@
     <title>发现</title>
     <link rel="stylesheet" href="../../../layui.css">
     <style>
-
+        .layui-col-md2 {
+            /*border: 1px solid #f2f2f2;*/
+            padding: 8px 18px;
+        }
+        .avatar {
+            display: inline-block;
+            float: left;
+        }
+        .uname {
+            display: inline-block;
+            float: left;
+            margin-left: 6px;
+            font-size: 17px;
+        }
+        .save {
+            display: inline-block;
+            float: left;
+            margin-top: -24px;
+            margin-left: 56px;
+        }
+        .layui-input {
+            width: 91.3%;
+            display: inline-block;
+        }
+        .layui-btn {
+            margin-top: -2px;
+        }
+        .add-friend {
+            width: 65px;
+        }
     </style>
 </head>
 <body>
@@ -21,16 +50,15 @@
                 <label class="layui-form-label">用户名:</label>
                 <div class="layui-input-block">
                     <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    <button class="layui-btn" lay-submit="" lay-filter="friend">查 找</button>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <button class="layui-btn" lay-submit="" lay-filter="friend">查 找</button>
             </div>
         </form>
     </div>
     <hr>
     <div class="layui-tab">
-
+        <div class="layui-row">
+            </div>
     </div>
 </div>
 <script src="../../../../layui.js"></script>
@@ -67,10 +95,24 @@
                 data: data.field,
                 success:function(res){
                     if(!res.state){
-                        layer.alert(res.msg);
+                        layer.alert(res.message);
                         return;
                     }
-                    userList(res.data)
+                    if (res.data.length > 0){
+                        var html = '';
+                        res.data.forEach(function (v) {
+                            html += '<div class="layui-col-md2"><div class="avatar">' +
+                                '<img src="' + v.avatar + '" style="width: 50px; height:50px"></div>' +
+                                '<div class="uname">' + v.username + '</div>' +
+                                '<div class="save">' +
+                                '<button class="add-friend" lay-submit="" lay-filter="add-friend"><i class="layui-icon">&#xe654;</i>好友</button>' +
+                                '</div>' +
+                                '</div>';
+                        });
+                        $('.layui-row').html(html);
+                    }else{
+                        layer.msg('查无此人');
+                    }
                 },
                 error:function(e){
                     layer.alert("网络错误")
@@ -79,39 +121,38 @@
             return false;
         });
 
-        function userList(list) {
-            //展示已知数据
-            table.render({
-                elem: '.layui-tab',
-                toolbar: false,
-                loading:false
-                ,cols: [[ //标题栏
-                    {field: 'id', title: 'ID', width: 80, sort: true}
-                    ,{field: 'username', title: '用户名', width: 120}
-                    ,{field: 'avatar', title: '邮箱', minWidth: 150}
-                ]]
-                ,data: [{
-                    "id": "10001"
-                    ,"username": "杜甫"
-                    ,"avatar": "xianxin@layui.com"
-                }, {
-                    "id": "10002"
-                    ,"username": "李白"
-                    ,"avatar": "xianxin@layui.com"
-
-                }, {
-                    "id": "10003"
-                    ,"username": "王勃"
-                    ,"avatar": "xianxin@layui.com"
-
-                }, {
-                    "id": "10004"
-                    ,"username": "贤心"
-                    ,"avatar": "xianxin@layui.com"
-                }]
-                // ,even: true
+        form.on('submit(add-friend)', function () {
+            var index = $(this).parent();
+            var uname = index.prev().text(),
+                avatar =index.prev().prev().find('img').attr('src');
+            layim.add({
+                type: 'friend' //friend：申请加好友、group：申请加群
+                ,username: uname //好友昵称，若申请加群，参数为：groupname
+                ,avatar: avatar //头像
+                ,submit: function(group, remark, index){ //一般在此执行Ajax和WS，以通知对方
+                    $.ajax({
+                        url:'/chat/addFriend',
+                        type:'post',
+                        data:{
+                            username: uname,
+                            group:group,
+                            remark: remark
+                        },
+                        success:function (res) {
+                            if (!res.state){
+                                layer.msg(res.message);
+                                return;
+                            }
+                            layer.close(index); //关闭面板
+                        },
+                        error:function(e){
+                            layer.msg("网络错误")
+                        }
+                    });
+                }
             });
-        }
+            return false;
+        });
     });
 </script>
 </body>
