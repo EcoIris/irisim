@@ -17,7 +17,7 @@ PHPSocketIO核心文件:```irisim/public/start.php```
 layui核心目录:``` irisim/public/asset/layui```
 
 ## 测试
-导入数据库文件,生成测试账号1:abcd123  测试账号2:abcd456  默认密码:123456
+导入数据库文件,生成测试账号1:admin  测试账号2:root  默认密码:123456
 
 在```irisim/public```目录下打开doc窗口,运行命令```php start.php start```,开启3333端口进程
 
