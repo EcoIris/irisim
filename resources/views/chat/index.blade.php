@@ -13,7 +13,7 @@
 <script type="text/javascript" src="{{asset('/asset/layui/layui.js')}}"></script>
 <script type="text/javascript" src="{{asset('/asset/layui/layer.js')}}"></script>
 <script>
-        layui.use('layim', function(layim){
+    layui.use('layim', function(layim){
         var user = {!! $member !!};
         var room = {!! $room !!};
         // 如果服务端不在本机，请把127.0.0.1改成服务端ip
@@ -50,7 +50,15 @@
             },
             msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html', //消息盒子页面地址，若不开启，剔除该项即可
             find: layui.cache.dir + 'css/modules/layim/html/find.html', //发现页面地址，若不开启，剔除该项即可
-            chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
+            chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html', //聊天记录页面地址，若不开启，剔除该项即可
+        });
+
+        socket.on('msgBox', function (res) {
+            layim.on('ready', function(options){
+                if (res > 0){
+                    layim.msgbox(res);
+                }
+            });
         });
 
         // 接收错误提示

@@ -16,9 +16,11 @@ $io->on('workerStart', function() use($io){
         global $user;
         $data = json_decode($data,true);
         if ($data['code'] == 1){
-            $io->to($user[$data['id']]['socketId'])->emit('noticeMsg');
+            $io->to($user[$data['uid']]['socketId'])->emit('noticeMsg');
         }elseif ($data['code'] == 2){
             $io->to($user[$data['uid']]['socketId'])->emit('updateFriendList', $data);
+        }elseif ($data['code'] == 3){
+            $io->to($user[$data['uid']]['socketId'])->emit('msgBox', $data['read']);
         }
     };
     // 执行监听

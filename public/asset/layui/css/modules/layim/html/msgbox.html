@@ -97,11 +97,9 @@
         });
 
         //打开页面即把消息标记为已读
-        /*
-        $.post('/message/read', {
-          type: 1
+        $.get('/chat/read', {
+            type: 1
         });
-        */
 
         //操作
         var active = {

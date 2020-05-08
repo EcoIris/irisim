@@ -103,6 +103,13 @@ class ChatController extends Controller
             ->where('a.uid', $member->id)
             ->get()
             ->toArray();
+        $count = FriendRequest::where(['to_id' => $member->id, 'read' => 0])->count('id');
+        $res = [
+            'uid' => $member->id,
+            'code' => 3,
+            'read' => $count
+        ];
+        $this->noticeMsg($res);
         return response()->json(['code' => 0, 'msg' => '', 'data' => $data]);
     }
 
@@ -170,7 +177,7 @@ class ChatController extends Controller
         ]);
         if ($row){
             $data = [
-                'id' => $uid,
+                'uid' => $uid,
                 'code' => 1,
                 'msg' => '好友申请'
             ];
@@ -284,6 +291,19 @@ class ChatController extends Controller
             $friendRequest->status = 3;
             $friendRequest->update_time = $time;
             $friendRequest->save();
+        }
+        return $this->success();
+    }
+
+    /*
+     * 通知消息改为已读
+     * */
+    public function read(Request $request)
+    {
+        $member = session('member');
+        $type = $request->input('type', 1);
+        if ($type == 1){
+            FriendRequest::where(['to_id' => $member->id, 'read' => 0])->update(['read' => 1]);
         }
         return $this->success();
     }
