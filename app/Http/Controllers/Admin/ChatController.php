@@ -148,7 +148,9 @@ class ChatController extends Controller
         if (!$uid){
             return $this->fail('无效用户');
         }
-
+        if ($member->id == $uid){
+            return $this->fail('自己不可以加自己');
+        }
         $is_friend = Friend::where(['uid' => $member->id, 'friend_id' => $uid])->count('id');
         if ($is_friend){
             return $this->fail($username . '和您已经是好友啦,不可重复添加');
@@ -186,7 +188,7 @@ class ChatController extends Controller
             ->select('a.id', 'a.from_id as uid', 'a.friend_group_id as from_group', 'a.to_id', 'a.status', 'a.postscript as remark', 'a.create_time as time', 'b.id as user_id', 'b.username', 'b.avatar', 'b.sign')
             ->where('to_id', $member->id)
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(5);
         if ($list->items()){
             foreach ($list->items() as $value){
                 $value->href = null;
@@ -210,7 +212,7 @@ class ChatController extends Controller
                 ];
             }
         }
-        return $this->success($list->items());
+        return response()->json(['state' => 1, 'msg' => '', 'data' => $list->items(), 'pages' => $list->lastPage()]);
     }
 
     /*
@@ -278,9 +280,11 @@ class ChatController extends Controller
         $uid = $request->input('uid');
         $time = date('YmdHis');
         $friendRequest = FriendRequest::where(['from_id' => $uid, 'to_id' => $member->id])->first();
-        $friendRequest->status = 3;
-        $friendRequest->update_time = $time;
-        $friendRequest->save();
+        if ($friendRequest){
+            $friendRequest->status = 3;
+            $friendRequest->update_time = $time;
+            $friendRequest->save();
+        }
         return $this->success();
     }
 }
