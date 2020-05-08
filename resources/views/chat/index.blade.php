@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>即时通讯IM</title>
-    <link rel="stylesheet" href="{{asset('/asset/layui/css/layim.css')}}">
-    <link rel="stylesheet" href="{{asset('/asset/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{asset('asset/layui/css/layim.css')}}">
+    <link rel="stylesheet" href="{{asset('asset/layui/css/layui.css')}}">
 </head>
 <body>
-<script type="text/javascript" src="{{asset('/asset/js/jquery.min.js')}}"></script>
-<script type="text/javascript" src='{{asset('/asset/js/socket.io.js')}}'></script>
-<script type="text/javascript" src="{{asset('/asset/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{asset('/asset/layui/layer.js')}}"></script>
+<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
+<script type="text/javascript" src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
+<script type="text/javascript" src="{{asset('asset/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{asset('asset/layui/layer.js')}}"></script>
 <script>
     layui.use('layim', function(layim){
         var user = {!! $member !!};

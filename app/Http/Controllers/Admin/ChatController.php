@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Friend;
 use App\Http\Models\FriendGroup;
 use App\Http\Models\FriendRequest;
-use App\Http\Models\Group;
 use App\Http\Models\GroupUser;
 use App\Http\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use function GuzzleHttp\Psr7\uri_for;
 
 class ChatController extends Controller
 {
