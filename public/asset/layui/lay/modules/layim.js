@@ -285,6 +285,26 @@
             }),
                 e(document).off("mousedown", i).on("mousedown", i),
                 e(window).off("resize", i).on("resize", i))
+        });
+        x.find(".layim-list-group").on("contextmenu", "li", function(a) {
+            var n = e(this)
+                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '">' +
+                '<li layim-event="menuGroup" data-type="one">退出该群</li></ul>';
+            n.hasClass("layim-null") || (t.tips(l, this, {
+                tips: 1,
+                time: 0,
+                anim: 5,
+                fixed: !0,
+                skin: "layui-box layui-layim-contextmenu",
+                success: function(i) {
+                    var a = function(i) {
+                        ii(i)
+                    };
+                    i.off("mousedown", a).on("mousedown", a)
+                }
+            }),
+                e(document).off("mousedown", i).on("mousedown", i),
+                e(window).off("resize", i).on("resize", i))
         })
     }, T = function(i) {
         return b && t.close(b.attr("times")),
@@ -1255,6 +1275,38 @@
                     }),
                     o.html(d));
             t.closeAll("tips")
+        },
+        menuGroup: function(i, a) {
+            t.confirm('确定要退出该群吗？', function(index){
+                var n = layui.data("layim")[j.mine.id] || {}
+                    , l = i.parent()
+                    , s = i.data("type")
+                    , o = x.find(".layim-list-group")
+                    , d = '<li class="layim-null">暂无群组</li>';
+                var group = o.children().eq(l.data("index")).attr('class').substring(11);
+
+                e.ajax({
+                    url: '/chat/groupOut',
+                    type: 'post',
+                    data: {
+                        group: group
+                    },
+                    success: function () {
+
+                    }
+                });
+            });
+
+                // var r = n.history;
+                // delete r[l.data("index")],
+                //     n.history = r,
+                //     layui.data("layim", {
+                //         key: j.mine.id,
+                //         value: n
+                //     }),
+                //     e(".layim-list-group li.layim-" + l.data("index")).remove(),
+                // 0 === o.find("li").length && o.html(d)
+            // t.closeAll("tips")
         }
     };
     i("layim", new c)

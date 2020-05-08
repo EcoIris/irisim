@@ -305,4 +305,13 @@ class ChatController extends Controller
         }
         return $this->success();
     }
+
+    /*
+     * 退群
+     * */
+    public function groupOut(Request $request)
+    {
+        $member = session('member');
+        $group = $request->input('group');
+    }
 }

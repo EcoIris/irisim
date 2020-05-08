@@ -15,5 +15,6 @@ class VerifyCsrfToken extends Middleware
         '/chat/agreeFriend',
         '/chat/addFriend',
         '/chat/refuseFriend',
+        '/chat/groupOut'
     ];
 }

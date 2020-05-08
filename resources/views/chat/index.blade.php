@@ -18,7 +18,6 @@
         var room = {!! $room !!};
         // 如果服务端不在本机，请把127.0.0.1改成服务端ip
         var socket = io('http://127.0.0.1:3333',{query:{user:JSON.stringify(user),room:JSON.stringify(room)}});
-
         //基础配置
         layim.config({
             //我的信息、好友列表、群组列表
