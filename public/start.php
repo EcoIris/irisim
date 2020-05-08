@@ -9,6 +9,22 @@ $user = [];
 // 创建socket.io服务端，监听3120端口
 $io = new SocketIO(3333);
 
+$io->on('workerStart', function() use($io){
+    // 监听一个text端口
+    $inner_http_worker = new Worker('text://0.0.0.0:3121');
+    $inner_http_worker->onMessage = function($http_connection, $data) use($io){
+        global $user;
+        $data = json_decode($data,true);
+        if ($data['code'] == 1){
+            $io->to($user[$data['id']]['socketId'])->emit('noticeMsg');
+        }elseif ($data['code'] == 2){
+            $io->to($user[$data['uid']]['socketId'])->emit('updateFriendList', $data);
+        }
+    };
+    // 执行监听
+    $inner_http_worker->listen();
+});
+
 // 客户端连接
 $io->on('connection', function($socket) use ($io){
 
@@ -32,7 +48,7 @@ $io->on('connection', function($socket) use ($io){
     }
 
     // 发送私聊消息
-    $socket->on('sendMsg', function($data) use ($io){
+    $socket->on('sendMsg', function($data) use ($socket){
         global $user;
         $res = [
             'id' => $data['mine']['id'], //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
@@ -46,7 +62,7 @@ $io->on('connection', function($socket) use ($io){
             'timestamp' => Controller::getMillisecond() //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000,
         ];
         if (isset($user[$data['to']['id']])){
-            $io->to($user[$data['to']['id']]['socketId'])->emit('updateMsg', $res);
+            $socket->to($user[$data['to']['id']]['socketId'])->emit('updateMsg', $res);
         }
     });
 

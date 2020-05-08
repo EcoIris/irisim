@@ -46,6 +46,18 @@ class Controller extends BaseController
     }
 
     /**
+     * 发送通知
+     * @param $data
+     */
+    public function noticeMsg($data)
+    {
+        //建立socket连接到内部推送端口
+        $client = stream_socket_client('tcp://127.0.0.1:3121', $errno, $errmsg, 1);
+        // 发送数据，注意5678端口是Text协议的端口，Text协议需要在数据末尾加上换行符
+        fwrite($client, json_encode($data, JSON_UNESCAPED_UNICODE)."\n");
+    }
+
+    /**
      * 获取毫秒级时间戳
      * */
     static public function getMillisecond() {

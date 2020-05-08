@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/chat/agreeFriend',
-        '/chat/addFriend'
+        '/chat/addFriend',
+        '/chat/refuseFriend',
     ];
 }

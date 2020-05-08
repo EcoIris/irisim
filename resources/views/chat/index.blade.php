@@ -87,6 +87,21 @@
             layim.getMessage(res);
         });
 
+        //将好友追加到主面板
+        socket.on('updateFriendList', function (res) {
+            layim.addList(res);
+        });
+
+        socket.on('noticeMsg', function (res) {
+            var num = parseInt($('.layim-tool-msgbox').children().text());
+            if (num){
+                num += 1;
+            }else{
+                num = 1
+            }
+            layim.msgbox(num);
+        });
+
         // 更新在线状态
         layim.on('online', function(status){
             $.ajax({

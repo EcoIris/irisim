@@ -167,9 +167,15 @@ class ChatController extends Controller
             'create_time' => date('YmdHis')
         ]);
         if ($row){
-            return $this->success(['id' => $uid]);
+            $data = [
+                'id' => $uid,
+                'code' => 1,
+                'msg' => '好友申请'
+            ];
+            $this->noticeMsg($data);
+            return $this->success(['id' => $uid], '好友申请发送成功');
         }
-        return $this->fail('添加失败');
+        return $this->fail('好友申请发送失败');
     }
 
     public function noticeList(Request $request)
@@ -208,12 +214,73 @@ class ChatController extends Controller
     }
 
     /*
-     * 处理添加好友申请
+     * 同意好友申请
      * */
     public function agreeFriend(Request $request)
     {
-        return $this->fail('开发中...');
-//        $member = session('member');
-//        dd($member);
+        try {
+            DB::beginTransaction();
+            $member = session('member');
+            $uid = $request->input('uid');
+            $from_group = $request->input('from_group');
+            $group = $request->input('group');
+            $time = date('YmdHis');
+            $is_friend = Friend::where(['uid' => $member->id, 'friend_id' => $uid])->count('id');
+            if ($is_friend){
+                DB::commit();
+                return $this->success();
+            }
+            $friendRequest = FriendRequest::where(['from_id' => $uid, 'to_id' => $member->id])->first();
+            $friendRequest->status = 2;
+            $friendRequest->update_time = $time;
+            $friendRequest->save();
+            $data = [
+                [
+                    'uid' => $member->id,
+                    'friend_id' => $uid,
+                    'friend_group_id' => $group,
+                ],
+                [
+                    'uid' => $uid,
+                    'friend_id' => $member->id,
+                    'friend_group_id' => $from_group,
+                ]
+            ];
+            $row = Friend::insert($data);
+            if ($row){
+                $data = [
+                    'id' => $member->id,
+                    'uid' => $uid,
+                    'username' => $member->username,
+                    'avatar' => $member->avatar,
+                    'sign' => $member->sign,
+                    'groupid' => $from_group,
+                    'type' => 'friend',
+                    'code' => 2
+                ];
+                $this->noticeMsg($data);
+                DB::commit();
+                return $this->success();
+            }
+            throw new \Exception('添加失败');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    /*
+     * 拒绝好友申请
+     * */
+    public function refuseFriend(Request $request)
+    {
+        $member = session('member');
+        $uid = $request->input('uid');
+        $time = date('YmdHis');
+        $friendRequest = FriendRequest::where(['from_id' => $uid, 'to_id' => $member->id])->first();
+        $friendRequest->status = 3;
+        $friendRequest->update_time = $time;
+        $friendRequest->save();
+        return $this->success();
     }
 }

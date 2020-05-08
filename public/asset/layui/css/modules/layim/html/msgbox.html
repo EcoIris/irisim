@@ -109,9 +109,8 @@
             agree: function(othis){
                 var li = othis.parents('li')
                     ,uid = li.data('uid')
-                    ,from_group = li.data('fromGroup')
+                    ,from_group = li.data('fromgroup')
                     ,user = cache[uid];
-
                 //选择分组
                 parent.layui.layim.setFriendGroup({
                     type: 'friend'
@@ -123,7 +122,7 @@
                             url: '/chat/agreeFriend',
                             type: 'post',
                             data: {
-                                uid: uid //对方用户ID
+                                uid: user.id //对方用户ID
                                 ,from_group: from_group //对方设定的好友分组
                                 ,group: group //我设定的好友分组
                             },
@@ -139,7 +138,7 @@
                                     ,avatar: user.avatar //好友头像
                                     ,username: user.username //好友昵称
                                     ,groupid: group //所在的分组id
-                                    ,id: uid //好友ID
+                                    ,id: user.id //好友ID
                                     ,sign: user.sign //好友签名
                                 });
                                 parent.layer.close(index);
@@ -153,14 +152,15 @@
             //拒绝
             ,refuse: function(othis){
                 var li = othis.parents('li')
-                    ,uid = li.data('uid');
+                    ,uid = li.data('uid'),
+                    user = cache[uid];
 
                 layer.confirm('确定拒绝吗？', function(index){
-                    $.post('/im/refuseFriend', {
-                        uid: uid //对方用户ID
+                    $.post('/chat/refuseFriend', {
+                        uid: user.id //对方用户ID
                     }, function(res){
-                        if(res.code != 0){
-                            return layer.msg(res.msg);
+                        if(!res.state){
+                            return layer.msg(res.message);
                         }
                         layer.close(index);
                         othis.parent().html('<em>已拒绝</em>');
