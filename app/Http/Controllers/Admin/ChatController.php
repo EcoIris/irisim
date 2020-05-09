@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Friend;
 use App\Http\Models\FriendGroup;
 use App\Http\Models\FriendRequest;
+use App\Http\Models\Group;
 use App\Http\Models\GroupUser;
 use App\Http\Models\User;
 use Illuminate\Http\Request;
@@ -311,7 +312,37 @@ class ChatController extends Controller
      * */
     public function groupOut(Request $request)
     {
-        $member = session('member');
-        $group = $request->input('group');
+        try {
+            DB::beginTransaction();
+            $member = session('member');
+            $group = $request->input('group');
+            $identity = GroupUser::where(['group_id' => $group, 'uid' => $member->id])->first();
+            if ($identity){
+                if ($identity->role == 1){
+                    $ids =  GroupUser::where('group_id', $group)->pluck('uid')->toArray();
+                    GroupUser::where('group_id', $group)->delete();
+                    Group::where('id', $group)->delete();
+                    $data = [
+                        'group' => $group,
+                        'code' => 4,
+                        'uid' => $ids
+                    ];
+                }else{
+                    $data = [
+                        'group' => $group,
+                        'code' => 5,
+                        'uid' => $member->id,
+                        'username' => $member->username
+                    ];
+                    GroupUser::where(['group_id' => $group, 'uid' => $member->id])->delete();
+                }
+                $this->noticeMsg($data);
+            }
+            DB::commit();
+            return $this->success();
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->fail($e->getMessage());
+        }
     }
 }

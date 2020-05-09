@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="{{asset('asset/layui/css/layui.css')}}">
 </head>
 <body>
-<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
 <script type="text/javascript" src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
+<script type="text/javascript" src="{{asset('asset/js/jquery.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('asset/layui/layui.js')}}"></script>
 <script type="text/javascript" src="{{asset('asset/layui/layer.js')}}"></script>
 <script>
@@ -107,6 +107,12 @@
                 num = 1
             }
             layim.msgbox(num);
+        });
+
+        socket.on('removeGroup', function (res) {
+            console.log(res);
+            $(".layim-list-group li.layim-group" + res).remove();
+            $(".layim-list-history li.layim-group" + res).remove();
         });
 
         // 更新在线状态

@@ -1283,30 +1283,22 @@
                     , s = i.data("type")
                     , o = x.find(".layim-list-group")
                     , d = '<li class="layim-null">暂无群组</li>';
-                var group = o.children().eq(l.data("index")).attr('class').substring(11);
-
+                var group = o.children().eq(l.data("index"));
+                var groupId = group.attr('class').substring(11);
                 e.ajax({
                     url: '/chat/groupOut',
                     type: 'post',
                     data: {
-                        group: group
+                        group: groupId
                     },
-                    success: function () {
-
+                    success: function (res) {
+                        if (!res.state){
+                            t.msg(res.message);
+                        }
+                        t.close(index);
                     }
                 });
             });
-
-                // var r = n.history;
-                // delete r[l.data("index")],
-                //     n.history = r,
-                //     layui.data("layim", {
-                //         key: j.mine.id,
-                //         value: n
-                //     }),
-                //     e(".layim-list-group li.layim-" + l.data("index")).remove(),
-                // 0 === o.find("li").length && o.html(d)
-            // t.closeAll("tips")
         }
     };
     i("layim", new c)

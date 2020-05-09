@@ -9,10 +9,10 @@ $user = [];
 // 创建socket.io服务端，监听3120端口
 $io = new SocketIO(3333);
 
-$io->on('workerStart', function() use($io){
+$io->on('workerStart', function($socket) use ($io){
     // 监听一个text端口
     $inner_http_worker = new Worker('text://0.0.0.0:3121');
-    $inner_http_worker->onMessage = function($http_connection, $data) use($io){
+    $inner_http_worker->onMessage = function($http_connection, $data) use ($io){
         global $user;
         $data = json_decode($data,true);
         if ($data['code'] == 1){
@@ -21,6 +21,13 @@ $io->on('workerStart', function() use($io){
             $io->to($user[$data['uid']]['socketId'])->emit('updateFriendList', $data);
         }elseif ($data['code'] == 3){
             $io->to($user[$data['uid']]['socketId'])->emit('msgBox', $data['read']);
+        }elseif ($data['code'] == 4){
+            foreach ($data['uid'] as $value){
+                $io->to($user[$value]['socketId'])->emit('removeGroup', $data['group']);
+            }
+        }elseif ($data['code'] == 5){
+            $http_connection->leave('room'.$data['group']);
+            $io->to($user[$data['uid']]['socketId'])->emit('removeGroup', $data['group']);
         }
     };
     // 执行监听
