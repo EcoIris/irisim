@@ -28,6 +28,8 @@ $io->on('workerStart', function($socket) use ($io){
         }elseif ($data['code'] == 5){
             $http_connection->leave('room'.$data['group']);
             $io->to($user[$data['uid']]['socketId'])->emit('removeGroup', $data['group']);
+        }elseif ($data['code'] == 6){
+            $io->to($user[$data['uid']]['socketId'])->emit('removeFriend', $data['friendId']);
         }
     };
     // 执行监听

@@ -110,9 +110,15 @@
         });
 
         socket.on('removeGroup', function (res) {
-            console.log(res);
             $(".layim-list-group li.layim-group" + res).remove();
             $(".layim-list-history li.layim-group" + res).remove();
+        });
+
+        socket.on('removeFriend', function (res) {
+            $(".layim-list-friend li.layim-friend" + res).remove();
+            var count = $(".layim-list-friend li").find("h5 .layim-count");
+            count.text(count.text() - 1);
+            $(".layim-list-history li.layim-friend" + res).remove();
         });
 
         // 更新在线状态

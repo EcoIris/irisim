@@ -267,9 +267,30 @@
         var i = function() {
             t.closeAll("tips")
         };
+        x.find(".layim-list-friend .layui-layim-list").on("contextmenu", "li", function(a) {
+            var n = e(this)
+                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '">' +
+                '<li layim-event="menuFriend" data-type="one">删除该好友</li></ul>';
+            n.hasClass("layim-null") || (t.tips(l, this, {
+                tips: 1,
+                time: 0,
+                anim: 5,
+                fixed: !0,
+                skin: "layui-box layui-layim-contextmenu",
+                success: function(i) {
+                    var a = function(i) {
+                        ii(i)
+                    };
+                    i.off("mousedown", a).on("mousedown", a)
+                }
+            }),
+                e(document).off("mousedown", i).on("mousedown", i),
+                e(window).off("resize", i).on("resize", i))
+        });
         x.find(".layim-list-history").on("contextmenu", "li", function(a) {
             var n = e(this)
-                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '"><li layim-event="menuHistory" data-type="one">移除该会话</li><li layim-event="menuHistory" data-type="all">清空全部会话</li></ul>';
+                , l = '<ul data-id="' + n[0].id + '" data-index="' + n.data("index") + '">' +
+                '<li layim-event="menuHistory" data-type="one">移除该会话</li><li layim-event="menuHistory" data-type="all">清空全部会话</li></ul>';
             n.hasClass("layim-null") || (t.tips(l, this, {
                 tips: 1,
                 time: 0,
@@ -1299,7 +1320,35 @@
                     }
                 });
             });
-        }
+        },
+        menuFriend: function(i, a) {
+            t.confirm('确定要删除该好友吗？', function(index){
+                var n = layui.data("layim")[j.mine.id] || {}
+                    , l = i.parent()
+                    , s = i.data("type")
+                    , o = x.find(".layim-list-friend")
+                    , d = '<li class="layim-null">暂无好友</li>';
+                var friend = o.children().find('.layui-layim-list').children().eq(l.data("index"));
+                var friendId = friend.attr('class').substring(12);
+                var count = o.children().find('h5 .layim-count');
+                e.ajax({
+                    url: '/chat/delFriend',
+                    type: 'post',
+                    data: {
+                        friendId: friendId
+                    },
+                    success: function (res) {
+                        if (!res.state){
+                            t.msg(res.message);
+                        }
+                        friend.remove();
+                        count.text(count.text() - 1);
+                        e(".layim-list-history li.layim-friend" + res.data).remove();
+                        t.close(index);
+                    }
+                });
+            });
+        },
     };
     i("layim", new c)
 }).addcss("modules/layim/layim.css?v=3.9.1", "skinlayimcss");

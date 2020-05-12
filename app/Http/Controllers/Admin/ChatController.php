@@ -345,4 +345,32 @@ class ChatController extends Controller
             return $this->fail($e->getMessage());
         }
     }
+
+    public function delFriend(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $member = session('member');
+            $friendId = $request->input('friendId');
+            if (!$friendId){
+                return $this->fail('无效参数');
+            }
+            $row = Friend::where(['uid' => $member->id, 'friend_id' => $friendId])->delete();
+            $row1 = Friend::where(['uid' => $friendId, 'friend_id' => $member->id])->delete();
+            if ($row && $row1){
+                $data = [
+                    'friendId' => $member->id,
+                    'code' => 6,
+                    'uid' => $friendId
+                ];
+                $this->noticeMsg($data);
+                DB::commit();
+                return $this->success($friendId);
+            }
+            throw new \Exception('删除失败稍后重试');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->fail($e->getMessage());
+        }
+    }
 }

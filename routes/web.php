@@ -26,6 +26,7 @@ Route::group(['middleware' => ['verifyLogin']], function () {
     Route::post('/chat/updateSign', 'Admin\ChatController@updateSign');
     Route::post('/chat/refuseFriend', 'Admin\ChatController@refuseFriend');
     Route::post('/chat/groupOut', 'Admin\ChatController@groupOut');
+    Route::post('/chat/delFriend', 'Admin\ChatController@delFriend');
     Route::get('/chat/read', 'Admin\ChatController@read');
 });
 
