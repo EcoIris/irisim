@@ -1,23 +1,23 @@
 ## 项目截图
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032110登录.png" width="390">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032110登录.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514031026主面板.png" width="130">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/o_200514031223群组面板.png" width="130">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032139最近联系人面板.png" width="130">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514031026主面板.png">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/o_200514031223群组面板.png">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032139最近联系人面板.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032307聊天面板.png" width="390">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032307聊天面板.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032511消息盒子.png" width="390">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032511消息盒子.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032650查找.png" width="390">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032650查找.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032832背景.png" width="390">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032832背景.png">
 </p>
 
 ## 介绍
