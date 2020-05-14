@@ -17,7 +17,7 @@
 <img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032650查找.png" width="390">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032832背景.png" width="390">
+<img src="https://github.com/EcoIris/irisim/public/asset/image/背景.png" width="390">
 </p>
 
 ## 介绍
