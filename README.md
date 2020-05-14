@@ -1,31 +1,26 @@
 ## 项目截图
 
 <p align="center">
-<img src="/EcoIris/irisim/tree/master/public/images/login.png">
+<img src="http://img.xiliujia.com/src/login.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514031026主面板.png">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/o_200514031223群组面板.png">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032139最近联系人面板.png">
+<img src="http://img.xiliujia.com/src/index.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032307聊天面板.png">
+<img src="http://img.xiliujia.com/src/find.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032511消息盒子.png">
+<img src="http://img.xiliujia.com/src/msg.png">
 </p>
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032650查找.png">
-</p>
-<p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032832背景.png">
+<img src="http://img.xiliujia.com/src/background.png">
 </p>
 
 ## 介绍
 
-使用laravel框架，PHPSocketIO + layui 实现web端即时通信，仅作为个人学习使用。
-- [laravel](https://learnku.com/docs/laravel/7.x/installation/7447) 7.6
-- [php](https://www.php.net/downloads) >= 7.2.5
+使用laravel + PHPSocketIO + layui 实现web端仿QQ即时通讯IM，仅作为个人学习使用。
+- [laravel7.6](https://learnku.com/docs/laravel/7.x/installation/7447) 
+- [php >= 7.2.5](https://www.php.net/downloads) 
 - [PHPSocketIO](https://github.com/walkor/phpsocket.io)
 - [layui](https://www.layui.com/doc/modules/layim.html)
 
