@@ -1,6 +1,8 @@
 ## 项目截图
+![image](https://github.com/EcoIris/irisim/tree/master/public/asset/images/登录.png)
+
 <p align="center">
-<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032110登录.png">
+<img src="https://github.com/EcoIris/irisim/tree/master/public/asset/images/登录.png">
 </p>
 <p align="center">
 <img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514031026主面板.png">
