@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 
 // 已连接的用户列表
 $user = [];
-// 创建socket.io服务端，监听3120端口
+// 创建socket.io服务端，
 $io = new SocketIO(3333);
 
 $io->on('workerStart', function($socket) use ($io){
-    // 监听一个text端口
+    // 监听一个text 3121端口
     $inner_http_worker = new Worker('text://0.0.0.0:3121');
     $inner_http_worker->onMessage = function($http_connection, $data) use ($io){
         global $user;
