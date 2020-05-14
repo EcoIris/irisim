@@ -1,3 +1,25 @@
+## 项目截图
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032110登录.png" width="390">
+</p>
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514031026主面板.png" width="130">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/o_200514031223群组面板.png" width="130">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032139最近联系人面板.png" width="130">
+</p>
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032307聊天面板.png" width="390">
+</p>
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032511消息盒子.png" width="390">
+</p>
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032650查找.png" width="390">
+</p>
+<p align="center">
+<img src="https://images.cnblogs.com/cnblogs_com/52lnamp/1227761/t_200514032832背景.png" width="390">
+</p>
+
 ## 介绍
 
 使用laravel框架，PHPSocketIO + layui 实现web端即时通信，仅作为个人学习使用。
@@ -8,7 +30,7 @@
 
 ## 配置
 
-根目录:```irisim/public```
+项目根目录:```irisim/public```
 
 数据库SQL文件:```irisim/irisim.sql```
 
@@ -21,4 +43,4 @@ layui核心目录:``` irisim/public/asset/layui```
 
 在```irisim/public```目录下打开doc窗口,运行命令```php start.php start```,开启3333端口进程
 
-用两种浏览器分别打开配置到根目录的ip或虚拟域名,使用测试账号1和测试账号2登录即可测试
+用两种浏览器分别访问根目录地址,使用测试账号1和测试账号2登录即可测试
