@@ -29,11 +29,7 @@
 <script src="../../../../layui.js"></script>
 <script>
     layui.use(['layim', 'laypage'], function () {
-        var layim = layui.layim
-            , layer = layui.layer
-            , laytpl = layui.laytpl
-            , $ = layui.jquery
-            , laypage = layui.laypage;
+        var layim = layui.layim, layer = layui.layer, laytpl = layui.laytpl, $ = layui.jquery, laypage = layui.laypage;
 
         //开始请求聊天记录
         // var param = location.search //获得URL参数。该窗口url会携带会话id和type，他们是你请求聊天记录的重要凭据
@@ -61,19 +57,14 @@
         //             , content: '你是谁呀亲。。我爱的是贤心！我爱的是贤心！我爱的是贤心！重要的事情要说三遍~'
         //         }, {
         //             username: 'Z_子晴'
-        //             ,
-        //             id: 108101
-        //             ,
-        //             avatar: '//tva3.sinaimg.cn/crop.0.0.512.512.180/8693225ajw8f2rt20ptykj20e80e8weu.jpg'
-        //             ,
-        //             timestamp: 1480897908000
-        //             ,
-        //             content: '注意：这些都是模拟数据，实际使用时，需将其中的模拟接口改为你的项目真实接口。\n该模版文件所在目录（相对于layui.js）：\n/css/modules/layim/html/chatlog.html'
+        //             ,id: 108101
+        //             ,avatar: '//tva3.sinaimg.cn/crop.0.0.512.512.180/8693225ajw8f2rt20ptykj20e80e8weu.jpg'
+        //             ,timestamp: 1480897908000
+        //             ,content: '注意：这些都是模拟数据，实际使用时，需将其中的模拟接口改为你的项目真实接口。\n该模版文件所在目录（相对于layui.js）：\n/css/modules/layim/html/chatlog.html'
         //         }]
         //     }
         var id = getQueryVariable('id');
 
-        // var cache =  layui.layim.cache();
         var local = layui.data('layim');
         var html = laytpl(LAY_tpl.value).render({
             data: local[1]['chatlog']['friend'+id]
