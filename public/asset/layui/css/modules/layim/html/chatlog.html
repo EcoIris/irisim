@@ -19,10 +19,10 @@
 <div id="LAY_page" style="margin: 0 10px;"></div>
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
-  if(item.id == parent.layui.layim.cache().mine.id){ }}
-    <li class="layim-chat-mine"><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+  if(item.fromid){ }}
+        <li><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# } else { }}
-    <li><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite>{{ item.username }}<i>{{ layui.data.date(item.timestamp) }}</i></cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
+        <li class="layim-chat-mine"><div class="layim-chat-user"><img src="{{ item.avatar }}"><cite><i>{{ layui.data.date(item.timestamp) }}</i>{{ item.username }}</cite></div><div class="layim-chat-text">{{ layui.layim.content(item.content) }}</div></li>
   {{# }
 }); }}
 </textarea>
@@ -66,6 +66,7 @@
         var id = getQueryVariable('id');
 
         var local = layui.data('layim');
+
         var html = laytpl(LAY_tpl.value).render({
             data: local[1]['chatlog']['friend'+id]
         });
@@ -79,9 +80,11 @@
             var vars = query.split("&");
             for (var i=0;i<vars.length;i++) {
                 var pair = vars[i].split("=");
-                if(pair[0] == variable){return pair[1];}
+                if(pair[0] === variable){
+                    return pair[1];
+                }
             }
-            return(false);
+            return false;
         }
     });
 

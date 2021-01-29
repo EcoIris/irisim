@@ -989,7 +989,7 @@
                     title: "查找",
                     shade: !1,
                     maxmin: !0,
-                    area: ["1000px", "520px"],
+                    area: ["800px", "520px"],
                     skin: "layui-box layui-layer-border",
                     resize: !1,
                     content: j.base.find

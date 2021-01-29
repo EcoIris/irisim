@@ -13,21 +13,18 @@
         .avatar {
             display: inline-block;
             float: left;
+            padding-right: 6px;
         }
         .uname {
             display: inline-block;
             float: left;
-            margin-left: 6px;
             font-size: 17px;
         }
         .save {
-            display: inline-block;
-            float: left;
-            margin-top: -24px;
-            margin-left: 56px;
+            margin-top: 27px;
         }
         .layui-input {
-            width: 91.3%;
+            width: 88%;
             display: inline-block;
         }
         .layui-btn {
@@ -39,10 +36,6 @@
     </style>
 </head>
 <body>
-<!--<div style="margin: 15px;">-->
-<!--    <blockquote class="layui-elem-quote">开发中...-->
-<!--        <br></blockquote>-->
-<!--</div>-->
 <div class="layui-container">
     <div class="layui-tab">
         <form class="layui-form layui-form-pane" action="">
@@ -94,23 +87,20 @@
                 type: 'get',
                 data: data.field,
                 success:function(res){
-                    if(!res.state){
-                        layer.alert(res.message);
-                        return;
-                    }
                     if (res.data.length > 0){
                         var html = '';
                         res.data.forEach(function (v) {
                             html += '<div class="layui-col-md2"><div class="avatar">' +
                                 '<img src="' + v.avatar + '" style="width: 50px; height:50px"></div>' +
                                 '<div class="uname">' + v.username + '</div>' +
-                                '<div class="save">' +
+                                '<p class="save">' +
                                 '<button class="add-friend" lay-submit="" lay-filter="add-friend"><i class="layui-icon">&#xe654;</i>好友</button>' +
-                                '</div>' +
+                                '</p>' +
                                 '</div>';
                         });
                         $('.layui-row').html(html);
                     }else{
+                        $('.layui-row').html('');
                         layer.msg('查无此人');
                     }
                 },

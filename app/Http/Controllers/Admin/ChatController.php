@@ -21,7 +21,7 @@ class ChatController extends Controller
     public function chat(Request $request)
     {
         $member = session('member');
-        if ($member->status == 'offline'){
+        if ($member->status == 'offline') {
             $member->status = 'hide';
         }
         $room = GroupUser::where('uid', $member->id)->pluck('group_id')->toArray();
@@ -38,14 +38,14 @@ class ChatController extends Controller
     {
         $member = session('member');
         $status = $request->input('status');
-        if (!$status){
+        if (!$status) {
             return $this->fail('无效参数');
         }
-        if ($status == 'hide'){
+        if ($status == 'hide') {
             $status = 'offline';
         }
         $row = User::where('id', $member->id)->update(['status' => $status]);
-        if ($row){
+        if ($row) {
             $member->status = $status;
             session(['member' => $member]);
             $friends = Friend::where('uid', $member->id)->pluck('friend_id')->toArray();
@@ -84,13 +84,13 @@ class ChatController extends Controller
     public function getUserRelation(Request $request)
     {
         $member = session('member');
-        if ($member->status == 'offline'){
+        if ($member->status == 'offline') {
             $member->status = 'hide';
         }
         $data = [];
         $data['mine'] = $member;
         $data['friend'] = FriendGroup::select('id', 'name as groupname')
-            ->with(['list' => function($query){
+            ->with(['list' => function ($query) {
                 return $query->select('friend.friend_group_id', 'user.id', 'user.username', 'user.avatar', 'user.sign', 'user.status')
                     ->leftJoin('user', 'friend.friend_id', '=', 'user.id');
             }])->where('uid', $member->id)
@@ -133,7 +133,12 @@ class ChatController extends Controller
     public function searchUser(Request $request)
     {
         $username = $request->input('username');
-        $list = User::select('id', 'username', 'avatar')->where('username', 'like', $username)->get()->toArray();
+        $type = $request->input('type', 1);
+        if ($type == 1) {
+            $list = User::select('id', 'username', 'avatar')->where('username', 'like', '%' . $username . '%')->get()->toArray();
+        } else {
+            $list = Group::select('id', 'name as username', 'avatar')->where('name', 'like', '%' . $username . '%')->get()->toArray();
+        }
         return $this->success($list);
     }
 
@@ -146,24 +151,24 @@ class ChatController extends Controller
         $username = $request->input('username');
         $groupId = $request->input('group');
         $remark = $request->input('remark');
-        if (!$username || !$groupId){
+        if (!$username || !$groupId) {
             return $this->fail('无效参数');
         }
 
         $uid = User::where('username', $username)->value('id');
-        if (!$uid){
+        if (!$uid) {
             return $this->fail('无效用户');
         }
-        if ($member->id == $uid){
+        if ($member->id == $uid) {
             return $this->fail('自己不可以加自己');
         }
         $is_friend = Friend::where(['uid' => $member->id, 'friend_id' => $uid])->count('id');
-        if ($is_friend){
+        if ($is_friend) {
             return $this->fail($username . '和您已经是好友啦,不可重复添加');
         }
 
         $add = FriendRequest::where(['from_id' => $member->id, 'to_id' => $uid, 'status' => 1])->count('id');
-        if ($add){
+        if ($add) {
             return $this->fail('请勿重复申请添加好友');
         }
         $row = FriendRequest::insert([
@@ -174,7 +179,7 @@ class ChatController extends Controller
             'postscript' => $remark,
             'create_time' => date('YmdHis')
         ]);
-        if ($row){
+        if ($row) {
             $data = [
                 'uid' => $uid,
                 'code' => 1,
@@ -195,18 +200,18 @@ class ChatController extends Controller
             ->where('to_id', $member->id)
             ->orderBy('id', 'desc')
             ->paginate(5);
-        if ($list->items()){
-            foreach ($list->items() as $value){
+        if ($list->items()) {
+            foreach ($list->items() as $value) {
                 $value->href = null;
                 $value->read = 1;
                 $value->type = 1;
-                if ($value->status == 1){
+                if ($value->status == 1) {
                     $value->content = '申请添加你为好友';
                     $value->from = 1;
-                }elseif ($value->status == 2){
+                } elseif ($value->status == 2) {
                     $value->content = '你同意了 ' . $value->username . ' 的好友申请';
                     $value->from = null;
-                }else{
+                } else {
                     $value->content = '你拒绝了 ' . $value->username . ' 的好友申请';
                     $value->from = null;
                 }
@@ -234,7 +239,7 @@ class ChatController extends Controller
             $group = $request->input('group');
             $time = date('YmdHis');
             $is_friend = Friend::where(['uid' => $member->id, 'friend_id' => $uid])->count('id');
-            if ($is_friend){
+            if ($is_friend) {
                 DB::commit();
                 return $this->success();
             }
@@ -255,7 +260,7 @@ class ChatController extends Controller
                 ]
             ];
             $row = Friend::insert($data);
-            if ($row){
+            if ($row) {
                 $data = [
                     'id' => $member->id,
                     'uid' => $uid,
@@ -271,7 +276,7 @@ class ChatController extends Controller
                 return $this->success();
             }
             throw new \Exception('添加失败');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->fail($e->getMessage());
         }
@@ -286,7 +291,7 @@ class ChatController extends Controller
         $uid = $request->input('uid');
         $time = date('YmdHis');
         $friendRequest = FriendRequest::where(['from_id' => $uid, 'to_id' => $member->id])->first();
-        if ($friendRequest){
+        if ($friendRequest) {
             $friendRequest->status = 3;
             $friendRequest->update_time = $time;
             $friendRequest->save();
@@ -301,7 +306,7 @@ class ChatController extends Controller
     {
         $member = session('member');
         $type = $request->input('type', 1);
-        if ($type == 1){
+        if ($type == 1) {
             FriendRequest::where(['to_id' => $member->id, 'read' => 0])->update(['read' => 1]);
         }
         return $this->success();
@@ -317,9 +322,9 @@ class ChatController extends Controller
             $member = session('member');
             $group = $request->input('group');
             $identity = GroupUser::where(['group_id' => $group, 'uid' => $member->id])->first();
-            if ($identity){
-                if ($identity->role == 1){
-                    $ids =  GroupUser::where('group_id', $group)->pluck('uid')->toArray();
+            if ($identity) {
+                if ($identity->role == 1) {
+                    $ids = GroupUser::where('group_id', $group)->pluck('uid')->toArray();
                     GroupUser::where('group_id', $group)->delete();
                     Group::where('id', $group)->delete();
                     $data = [
@@ -327,7 +332,7 @@ class ChatController extends Controller
                         'code' => 4,
                         'uid' => $ids
                     ];
-                }else{
+                } else {
                     $data = [
                         'group' => $group,
                         'code' => 5,
@@ -340,7 +345,7 @@ class ChatController extends Controller
             }
             DB::commit();
             return $this->success();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->fail($e->getMessage());
         }
@@ -352,12 +357,12 @@ class ChatController extends Controller
             DB::beginTransaction();
             $member = session('member');
             $friendId = $request->input('friendId');
-            if (!$friendId){
+            if (!$friendId) {
                 return $this->fail('无效参数');
             }
             $row = Friend::where(['uid' => $member->id, 'friend_id' => $friendId])->delete();
             $row1 = Friend::where(['uid' => $friendId, 'friend_id' => $member->id])->delete();
-            if ($row && $row1){
+            if ($row && $row1) {
                 $data = [
                     'friendId' => $member->id,
                     'code' => 6,
@@ -368,7 +373,7 @@ class ChatController extends Controller
                 return $this->success($friendId);
             }
             throw new \Exception('删除失败稍后重试');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->fail($e->getMessage());
         }
