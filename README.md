@@ -1,20 +1,4 @@
-## 项目截图
-
-<p align="center">
-<img src="http://img.xiliujia.com/src/login.png">
-</p>
-<p align="center">
-<img src="http://img.xiliujia.com/src/index.png">
-</p>
-<p align="center">
-<img src="http://img.xiliujia.com/src/find.png">
-</p>
-<p align="center">
-<img src="http://img.xiliujia.com/src/msg.png">
-</p>
-<p align="center">
-<img src="http://img.xiliujia.com/src/background.png">
-</p>
+## [项目演示](http://www.adiandian.cn/)
 
 ## 介绍
 
