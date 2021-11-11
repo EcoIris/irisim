@@ -1314,7 +1314,7 @@
                     },
                     success: function (res) {
                         if (!res.state){
-                            t.msg(res.message);
+                            return t.msg(res.message);
                         }
                         t.close(index);
                     }
@@ -1339,7 +1339,7 @@
                     },
                     success: function (res) {
                         if (!res.state){
-                            t.msg(res.message);
+                            return t.msg(res.message);
                         }
                         friend.remove();
                         count.text(count.text() - 1);
