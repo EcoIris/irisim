@@ -27,21 +27,20 @@
       <div class="row cl">
           <label class="form-label col-xs-3"></label>
           <div class="formControls col-xs-8">
-          <input name="username" type="text" placeholder="请输入用户名" autocomplete="off" class="input-text size-L" required>
+          <input name="username" type="text" placeholder="admin or root" autocomplete="off" class="input-text size-L" required>
         </div>
       </div>
       <div class="row cl">
           <label class="form-label col-xs-3"></label>
           <div class="formControls col-xs-8">
-          <input name="password" type="password" placeholder="请输入密码" autocomplete="off" class="input-text size-L" required>
+          <input name="password" type="password" placeholder="123456" autocomplete="off" class="input-text size-L" required>
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"></label>
         <div class="formControls col-xs-8">
-          <input name="captcha" class="input-text size-L" type="text" placeholder="验证码" style="width:150px;">
+          <input name="captcha" class="input-text size-L" type="text" placeholder="验证码" style="width:234px;">
           <img class="captcha" src="{{captcha_src('flat')}}" title="点击图片重新获取验证码">
-          <a id="captcha" href="javascript:;">点我换一张</a>
         </div>
       </div>
       <div class="row cl">
