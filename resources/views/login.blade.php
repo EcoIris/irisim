@@ -39,7 +39,7 @@
       <div class="row cl">
         <label class="form-label col-xs-3"></label>
         <div class="formControls col-xs-8">
-          <input name="captcha" class="input-text size-L" type="text" placeholder="验证码" style="width:234px;">
+          <input name="captcha" class="input-text size-L" type="text" placeholder="验证码" style="width:196px;">
           <img class="captcha" src="{{captcha_src('flat')}}" title="点击图片重新获取验证码">
         </div>
       </div>
