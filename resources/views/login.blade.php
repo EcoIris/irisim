@@ -81,7 +81,7 @@
   function logIn() {
     var username = login.find('input[name=username]');
     if (username.val() === '') {
-      layer.msg('请填写手机号',{icon:5,time:1000});
+      layer.msg('请填写账号',{icon:5,time:1000});
       username.focus();
       return;
     }
