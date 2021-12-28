@@ -20,7 +20,9 @@ $io->on('workerStart', function($socket) use ($io){
         }elseif ($data['code'] == 2){
             $io->to($user[$data['uid']]['socketId'])->emit('updateFriendList', $data);
         }elseif ($data['code'] == 3){
-            $io->to($user[$data['uid']]['socketId'])->emit('msgBox', $data['read']);
+            if (isset($user[$data['uid']])) {
+                $io->to($user[$data['uid']]['socketId'])->emit('msgBox', $data['read']);
+            }
         }elseif ($data['code'] == 4){
             foreach ($data['uid'] as $value){
                 $io->to($user[$value]['socketId'])->emit('removeGroup', $data['group']);
